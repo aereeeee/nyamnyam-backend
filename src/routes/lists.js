@@ -190,6 +190,7 @@ router.put("/:listId", async function(req, res, next) {
     images.length == 0
       ? "default-image"
       : images.filter(img => img.order === 0);
+  const url = listImage[0].url;
 
   list
     .modifyList(
@@ -197,7 +198,7 @@ router.put("/:listId", async function(req, res, next) {
       req.body["name"],
       req.body["location"],
       req.body["memo"],
-      listImage.url,
+      url,
       req.body["want_count"],
       req.body["like_count"],
       req.body["visited"]
