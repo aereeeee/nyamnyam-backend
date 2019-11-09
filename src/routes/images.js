@@ -114,6 +114,7 @@ router.get("/:imageId", function(req, res, next) {
  * {
  *     "imageId": 1,
  *     "file": "aaaaa",
+ *
  * }
  * @apiSuccessExample {json} Success:
  * HTTP/1.1 200 OK
