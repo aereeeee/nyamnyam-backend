@@ -3,6 +3,7 @@ const router = express.Router();
 const user = require("../database/users");
 const authMail = require("../utills/auth-email");
 const { upload, deleteS3 } = require("../utills/multer-s3");
+const passwordHash = require("../utills/passwordHash");
 
 /**
  * @api {post} /users/auth Auth User
@@ -28,6 +29,36 @@ router.post("/auth", authMail, function(req, res, next) {
   const authCode = req.code;
 
   res.status(200).json({ email: userEmail, code: authCode });
+});
+
+/**
+ * @api {post} /users/login Login User
+ * @apiName LoginUser
+ * @apiGroup User
+ *
+ * @apiParam {Json} body body.
+ * @apiParamExample {json} User Action:
+ * {
+ *     "user_id": "user1@gmail.com",
+ *     "password": "qwerty"
+ * }
+ *
+ * @apiSuccessExample {json} Success:
+ * HTTP/1.1 200 OK
+ * true / false
+ */
+router.post("/login", authMail, function(req, res, next) {
+  const userId = req.body.user_id;
+  const password = req.body.password;
+  user
+    .getUserId(userId)
+    .then(user => {
+      const status = user.password === password ? true : false;
+      res.status(200).send(status);
+    })
+    .catch(err => {
+      next(err);
+    });
 });
 
 /**
@@ -201,7 +232,7 @@ router.delete("/:userKey", function(req, res, next) {
 
   user
     .getUser(userKey)
-    .then( result => {
+    .then(result => {
       deleteS3(result["image"]);
     })
     .catch(err => {
