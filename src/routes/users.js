@@ -47,7 +47,7 @@ router.post("/auth", authMail, function(req, res, next) {
  * HTTP/1.1 200 OK
  * true / false
  */
-router.post("/login", authMail, function(req, res, next) {
+router.post("/login", function(req, res, next) {
   const userId = req.body.user_id;
   const password = req.body.password;
   user
